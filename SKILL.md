@@ -32,6 +32,10 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Every scenario simulation must automatically generate a physical audit document in the repository at `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`. The chat response must provide a concise executive summary and link directly to this physical file.
   </directive>
 
+  <directive id="direct_remediation_handoff">
+    Immediately following the audit report and scorecard, the agent must propose resolving the identified P0 critical blockers with a direct confirmation question. Upon user ratification, transition immediately into implementation planning and execution.
+  </directive>
+
   <directive id="high_density_reporting">
     Output findings with high token density: structured Markdown matrices, concrete file links (`file:///...`), direct UI component references, and prioritized remediation actions. Eliminate conversational fluff.
   </directive>
@@ -61,6 +65,7 @@ flowchart TD
     Layer2 --> Synthesize
     Synthesize --> InRepoDoc["Write Physical Audit to docs/audits/scenario-*.md"]
     InRepoDoc --> ChatSummary["Deliver Executive Summary & Clickable File Link in Chat"]
+    ChatSummary --> RemediationPrompt["Prompt Direct Remediation Handoff for P0 Blockers"]
 ```
 
 1. **Layer 1 — Deep Static Traversal (Default):**
@@ -75,7 +80,7 @@ flowchart TD
 
 ---
 
-## 4. The 5-Phase Simulation Protocol
+## 4. The 6-Phase Simulation Protocol
 
 ### Phase 0: Scenario Ingestion & Persona Synthesis
 1. Extract the core intent, creative seed, or business goal from `<XXX>`.
@@ -123,6 +128,13 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - **P2 (Deepening & Polish):** Usability refinements, visual ergonomics, and telemetry feedback.
 4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with a direct markdown link to the physical file: `[Full Audit Report](file://docs/audits/...)`.
 
+### Phase 5: Direct Remediation Hand-off
+Immediately following the summary, conclude with a direct actionable transition prompt:
+> *"P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?"*  
+*(Or in English: "Would you like to begin the implementation plan to resolve the identified P0 critical blockers?")*
+
+Upon explicit user confirmation, seamlessly initiate the implementation workflow, adhering to deep module principles, boundary validation, and zero-wrapper architecture.
+
 ---
 
 ## 5. Standard Output Schema
@@ -159,4 +171,7 @@ The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the c
 - [ ] **[File / Seam]**: Description of improvement.
 ### P2 — Usability & Polish
 - [ ] **[File / Seam]**: Description of refinement.
+
+---
+**P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?**
 ```
