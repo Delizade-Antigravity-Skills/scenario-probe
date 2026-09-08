@@ -24,6 +24,10 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="hard_gate_scoring_doctrine">
+    If ANY step encounters a `[CRITICAL_BLOCKER]` (P0), the Overall System Readiness Score is unconditionally capped at a maximum of **50%**. However, the simulation MUST NOT terminate early; it must continue evaluating downstream steps under a hypothetical pass assumption to expose all latent gaps across the entire lifecycle.
+  </directive>
+
   <directive id="in_repo_persistent_audit">
     Every scenario simulation must automatically generate a physical audit document in the repository at `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`. The chat response must provide a concise executive summary and link directly to this physical file.
   </directive>
@@ -101,7 +105,7 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - `[SUPPORTED]` — Fully operational, guided, and verifiable in code.
    - `[HIGH_FRICTION]` — Possible, but suffers from steep cognitive load, lack of smart defaults, or complex manual inputs.
    - `[SYSTEM_GAP]` — Required sub-need is completely missing or unsupported in the current codebase.
-   - `[CRITICAL_BLOCKER]` — Dead-end; halts progress, crashes, or fails invariant pre-flight checks.
+   - `[CRITICAL_BLOCKER]` — Dead-end; halts progress, crashes, or fails invariant pre-flight checks. (Triggers Hard-Gate scoring rule).
 
 ### Phase 4: In-Repo Documentation & Executive Scorecard
 1. **Physical File Generation:** Create the target folder if missing (`mkdir -p docs/audits`) and write the comprehensive report to `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`.
@@ -112,6 +116,7 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - **Execution Determinism & Safety (Weight: 15%):** Hardware safety, invariant validation, and error resilience.
    - **Output Consistency & Quality (Weight: 15%):** Fidelity, structural cohesion, and synchronization.
    - **Overall System Readiness Score:** Weighted composite score.
+     * **Hard-Gate Enforced:** If any `[CRITICAL_BLOCKER]` exists, max score is strictly capped at **50%**.
 3. **Prioritized Remediation Action Plan:**
    - **P0 (Critical Blockers):** Must-fix showstoppers preventing completion.
    - **P1 (High Friction & Guidance Gaps):** Missing smart defaults, co-pilot suggestion triggers, or confusing inputs.
@@ -126,7 +131,7 @@ The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the c
 
 ```markdown
 # Scenario Probe: [Scenario Name]
-**Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%]  
+**Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
 **Physical Audit File:** [docs/audits/scenario-slug-timestamp.md](file:///path/to/docs/audits/scenario-slug-timestamp.md)
 
 ## 1. Scenario Intent & Sub-Needs Deconstruction
@@ -137,7 +142,7 @@ The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the c
 |:---|:---|:---|:---|:---|:---|
 | 1 | ... | ... | ... | `[SUPPORTED]` | ... |
 | 2 | ... | ... | ... | `[HIGH_FRICTION]` | ... |
-| 3 | ... | ... | ... | `[SYSTEM_GAP]` | ... |
+| 3 | ... | ... | ... | `[CRITICAL_BLOCKER]` | ... |
 
 ## 3. System Scorecard
 - **Directorial Guidance & Co-Pilot:** [XX]% — [Brief rationale]
@@ -145,7 +150,7 @@ The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the c
 - **Cognitive Ergonomics & Usability:** [XX]% — [Brief rationale]
 - **Execution Determinism & Safety:** [XX]% — [Brief rationale]
 - **Output Consistency & Quality:** [XX]% — [Brief rationale]
-**Overall System Readiness Score:** **[XX]%**
+**Overall System Readiness Score:** **[XX]%** [Note if capped at 50% due to P0 blocker]
 
 ## 4. Prioritized Remediation Action Plan
 ### P0 — Critical Blockers (Showstoppers)
