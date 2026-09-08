@@ -1,6 +1,7 @@
 /* ==========================================================================
    SCENARIO PROBE: EDITORIAL LIGHT-CREAM AUDIT THEME
    Palette: Light Cream White (#FAF8F5) + Dark Charcoal (#181716) + Terracotta (#C85A32)
+   100% PURE CSS — STRICTLY ZERO INLINE STYLES IN HTML
    ========================================================================== */
 
 :root {
@@ -255,7 +256,6 @@ body {
   box-shadow: var(--shadow-md);
 }
 
-/* Severity-based Accent Borders */
 .flow-step-supported {
   border-left: 4px solid var(--border-strong);
 }
@@ -342,10 +342,6 @@ body {
 
 .flow-trio-item.trio-outcome .flow-trio-label {
   color: var(--accent);
-}
-
-.flow-trio-item.trio-outcome .flow-trio-content {
-  color: var(--text);
 }
 
 /* --------------------------------------------------------------------------
@@ -502,7 +498,7 @@ body {
 .dimension-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .dimension-header {
@@ -522,16 +518,32 @@ body {
   color: var(--text);
 }
 
-.dimension-bar {
+/* Native Semantic Progress Bar (100% Pure CSS, 0 Inline Styles) */
+progress.dimension-progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
   height: 6px;
-  background: var(--surface-raised);
+  border: none;
   border-radius: 3px;
+  background-color: var(--surface-raised);
   overflow: hidden;
+  display: block;
 }
 
-.dimension-fill {
-  height: 100%;
-  background: var(--accent);
+progress.dimension-progress::-webkit-progress-bar {
+  background-color: var(--surface-raised);
+  border-radius: 3px;
+}
+
+progress.dimension-progress::-webkit-progress-value {
+  background-color: var(--accent);
+  border-radius: 3px;
+}
+
+progress.dimension-progress::-moz-progress-bar {
+  background-color: var(--accent);
   border-radius: 3px;
 }
 
@@ -574,6 +586,12 @@ body {
   background: var(--surface-raised);
   color: var(--text-muted);
   border: 1px solid var(--border);
+}
+
+.remediation-empty-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding-left: 8px;
 }
 
 .remediation-list {
