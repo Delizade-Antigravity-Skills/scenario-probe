@@ -24,6 +24,12 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="adaptive_scope_granularity">
+    Dynamically detect scenario scope:
+    - **Full-Lifecycle Journey:** Broad goals (e.g. creating an animation, building a world) trigger a full cold-start to final delivery walkthrough (Workspace -> Export).
+    - **Targeted Subsystem Slice:** Specific feature targets (e.g. inpainting, foley mixer, YouTube export) assume valid upstream entities and execute deep, surgical audits on that subsystem's controls, edge cases, and pre-flight gates.
+  </directive>
+
   <directive id="behavioral_scannability">
     Present all matrix entries, status evaluations, and gap descriptions in clean, human-centric behavioral language. Describe exact user actions and system reactions clearly without cluttering the matrix with raw file links or code symbols. Keep the focus strictly on directorial UX, workflow mechanics, and functional gaps.
   </directive>
@@ -62,8 +68,12 @@ The probe operates on a two-tier **Hybrid & Progressive Verification Model**:
 
 ```mermaid
 flowchart TD
-    Scenario["User Scenario Seed"] --> Ingestion["Phase -1: Autonomous Domain & Architecture Ingestion<br/>(Scan CONTEXT.md, PRODUCT.md, Schemas, Routes)"]
-    Ingestion --> Layer1["Layer 1: Static Deep Code Traversal<br/>(Inspect Schemas, UI Primitives, Services, Routes)"]
+    Scenario["User Scenario Seed"] --> Ingestion["Phase -1: Autonomous Domain Ingestion<br/>(Scan CONTEXT.md, PRODUCT.md, Schemas, Routes)"]
+    Ingestion --> ScopeEval{"Evaluate Scope Granularity:<br/>Full Journey vs Subsystem Slice?"}
+    ScopeEval -- "Broad Intent" --> FullFlow["Plan Full Lifecycle: Cold Start to Export"]
+    ScopeEval -- "Targeted Subsystem" --> SliceFlow["Plan Deep Slice: Mock Upstream, Deep-Audit Feature"]
+    FullFlow --> Layer1["Layer 1: Static Deep Code Traversal"]
+    SliceFlow --> Layer1
     Layer1 --> SeamCheck{"Critical Seam or Invariant<br/>Requires Live Verification?"}
     SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
@@ -94,9 +104,12 @@ flowchart TD
 1. Read the system's foundational specifications (`CONTEXT.md`, `PRODUCT.md`, `Architecture_Decision.md` or equivalent).
 2. Dynamically derive the **6 Core Domain Pillars** that govern this application (e.g., for an animation suite: Worldbuilding, Characters, Screenplay, Staging, Diffusion, Acoustics; for e-commerce: Catalog, Cart, Checkout, Payment, Inventory, Notifications).
 
-### Phase 0: Scenario Ingestion & Persona Synthesis
+### Phase 0: Scenario Scope & Persona Synthesis
 1. Extract the core intent, creative seed, or business goal from `<XXX>`.
-2. Apply the **Worst-Case Ambiguity Persona Principle**:
+2. Determine **Scope Granularity**:
+   - **Full-Lifecycle Journey:** Broad goals (e.g. creating an animation, building a world) trigger a full cold-start to final delivery walkthrough (Workspace -> Export).
+   - **Targeted Subsystem Slice:** Specific feature targets (e.g. inpainting, foley mixer, YouTube export) assume valid upstream entities and execute deep, surgical audits on that subsystem's controls, edge cases, and pre-flight gates.
+3. Apply the **Worst-Case Ambiguity Persona Principle**:
    - **Default Archetype:** *The Zero-Detail Auteur*. High artistic/operational ambition, zero internal technical knowledge, no pre-written assets, and no prompt keywords.
    - **Technical Exception:** If and only if `<XXX>` explicitly specifies technical parameters (e.g., specific weights, frame rates, or custom protocols), adopt the *Informed Technical Showrunner* archetype.
    - **Initial State:** Directory setup, existing assets, credentials, hardware state.
@@ -109,7 +122,7 @@ Deconstruct the ambiguous user seed into the 6 dynamically ingested domain pilla
 
 ### Phase 2: Deterministic Task Flow & Journey Generation
 Map the chronological path the user must take through the application:
-- Order steps linearly from cold start to final output.
+- Order steps linearly from initial state to target outcome.
 - Link each step to the intended view, screen, or interface state.
 
 ### Phase 3: Codebase & Runtime Step Simulation (Gap Audit)
@@ -154,7 +167,7 @@ The generated document in `docs/audits/scenario-<slug>.md` and the chat response
 
 ```markdown
 # Scenario Probe: [Scenario Name]
-**Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
+**Target Deliverable:** [Outcome] | **Scope Mode:** [Full-Lifecycle | Targeted Subsystem] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
 **Living Audit File:** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)
 
 ## 1. Domain Ontology & System Pillars
