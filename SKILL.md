@@ -30,6 +30,11 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     - **Targeted Subsystem Slice:** Specific feature targets (e.g. inpainting, foley mixer, YouTube export) assume valid upstream entities and execute deep, surgical audits on that subsystem's controls, edge cases, and pre-flight gates.
   </directive>
 
+  <directive id="execution_autonomy_modes">
+    - **Default (One-Shot Flow):** Execute Phase -1 through Phase 5 autonomously in a single pass without interrupting the user.
+    - **Interactive Flag (`--interactive` / `-i`):** Pause after Phase 2 (Task Flow Generation) to present the synthesized flow and confirm directorial approval or adjustments before proceeding to Phase 3.
+  </directive>
+
   <directive id="behavioral_scannability">
     Present all matrix entries, status evaluations, and gap descriptions in clean, human-centric behavioral language. Describe exact user actions and system reactions clearly without cluttering the matrix with raw file links or code symbols. Keep the focus strictly on directorial UX, workflow mechanics, and functional gaps.
   </directive>
@@ -57,6 +62,7 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
 
 Activate this skill when:
 - The user inputs `test <scenario / feature / seed>` (e.g., `test bulutların üzerindeki animasyon dünyası`, `test guest checkout flow`, `test multi-speaker dialogue`).
+- The user inputs `test --interactive <scenario>` or `test -i <scenario>` for interactive flow alignment.
 - The user inputs `scenario-probe <query>` or `simulate user <intent>`.
 - The user requests an end-to-end user journey audit, stress test, or capability gap analysis on the current state of the codebase.
 
@@ -72,8 +78,11 @@ flowchart TD
     Ingestion --> ScopeEval{"Evaluate Scope Granularity:<br/>Full Journey vs Subsystem Slice?"}
     ScopeEval -- "Broad Intent" --> FullFlow["Plan Full Lifecycle: Cold Start to Export"]
     ScopeEval -- "Targeted Subsystem" --> SliceFlow["Plan Deep Slice: Mock Upstream, Deep-Audit Feature"]
-    FullFlow --> Layer1["Layer 1: Static Deep Code Traversal"]
-    SliceFlow --> Layer1
+    FullFlow --> InteractiveCheck{"--interactive flag present?"}
+    SliceFlow --> InteractiveCheck
+    InteractiveCheck -- "Yes" --> Pause["Pause: Solicit Task Flow Ratification"]
+    InteractiveCheck -- "No (Default)" --> Layer1["Layer 1: Static Deep Code Traversal"]
+    Pause --> Layer1
     Layer1 --> SeamCheck{"Critical Seam or Invariant<br/>Requires Live Verification?"}
     SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
@@ -124,6 +133,7 @@ Deconstruct the ambiguous user seed into the 6 dynamically ingested domain pilla
 Map the chronological path the user must take through the application:
 - Order steps linearly from initial state to target outcome.
 - Link each step to the intended view, screen, or interface state.
+- **Interactive Check:** If `--interactive` or `-i` was passed, pause here to present the flow and confirm user ratification before proceeding to Phase 3. Otherwise, proceed seamlessly.
 
 ### Phase 3: Codebase & Runtime Step Simulation (Gap Audit)
 For every single step in the journey, silently inspect the codebase and evaluate:
