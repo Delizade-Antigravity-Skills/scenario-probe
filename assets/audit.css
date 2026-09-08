@@ -15,6 +15,7 @@
   --accent: #C85A32;
   --accent-muted: rgba(200, 90, 50, 0.08);
   --accent-border: rgba(200, 90, 50, 0.35);
+  --accent-heavy: rgba(200, 90, 50, 0.18);
   
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Fira Code", monospace;
@@ -185,7 +186,7 @@ body {
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -227,6 +228,124 @@ body {
 .pillar-desc {
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   TASK FLOW & USER FLOW TIMELINE
+   -------------------------------------------------------------------------- */
+.flow-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  margin-top: 8px;
+}
+
+.flow-step-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.flow-step-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Severity-based Accent Borders */
+.flow-step-supported {
+  border-left: 4px solid var(--border-strong);
+}
+
+.flow-step-friction {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-muted) 0%, var(--surface) 25%);
+}
+
+.flow-step-blocker {
+  border-left: 6px solid var(--accent);
+  background: linear-gradient(90deg, var(--accent-heavy) 0%, var(--surface) 35%);
+}
+
+.flow-step-gap {
+  border-left: 4px dashed var(--accent);
+  background: var(--surface);
+}
+
+.flow-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.flow-step-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flow-step-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  background: var(--surface-raised);
+  color: var(--text);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.flow-step-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.flow-trio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  .flow-trio-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.flow-trio-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flow-trio-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.flow-trio-content {
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.flow-trio-item.trio-outcome .flow-trio-label {
+  color: var(--accent);
+}
+
+.flow-trio-item.trio-outcome .flow-trio-content {
+  color: var(--text);
 }
 
 /* --------------------------------------------------------------------------

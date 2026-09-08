@@ -24,6 +24,20 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="zero_information_loss_and_plan_parity">
+    Every single friction point, failure, and blocker diagnosed during the simulation MUST be preserved with 100% fidelity across both deliverables:
+    - In the HTML: Rendered in the Step-by-Step Task Flow Stream and Journey Matrix.
+    - In the Plan Markdown (`docs/audits/scenario-<slug>.md`): Recorded as a fully articulated, implementation-ready task entry (Subsystem, Current Friction, Required Resolution). Zero dropped items, zero hand-waving generalizations.
+  </directive>
+
+  <directive id="task_flow_trio_structure">
+    Every step in the Task Flow / User Flow must explicitly present the 3 core dimensions:
+    1. **Ne yapmaya çalıştı?** (User Goal / Attempted Action)
+    2. **Nerede yapmaya çalıştı?** (Target Surface / View / UI Component)
+    3. **Ne oldu?** (System Reaction, Result & Behavioral Reality)
+    Highlight problematic areas using the Terracotta accent color (`#C85A32`) scaled strictly to severity (Supported = neutral; Friction = accent tint; Blocker = solid accent emphasis).
+  </directive>
+
   <directive id="adaptive_scope_granularity">
     Dynamically detect scenario scope:
     - **Full-Lifecycle Journey:** Broad goals (e.g. creating an animation, building a world) trigger a full cold-start to final delivery walkthrough (Workspace -> Export).
@@ -38,7 +52,7 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Generate rich HTML at `docs/audits/html/scenario-<slug>.html`.
     - **Static CSS Asset Protection:** NEVER generate or inline large CSS blocks in responses. Ensure static CSS is copied once to `docs/audits/html/assets/audit.css` from the global skill assets.
     - **Editorial Strict Palette:** Light cream white (`#FAF8F5`) + Dark charcoal (`#181716`) + Single Accent: Warm Terracotta (`#C85A32`).
-    - **Navigation:** Sticky top header with section anchor links (`#overview`, `#pillars`, `#journey`, `#scorecard`, `#remediation`).
+    - **Navigation:** Sticky top header with section anchor links (`#overview`, `#pillars`, `#flow`, `#journey`, `#scorecard`, `#remediation`).
   </directive>
 
   <directive id="behavioral_scannability">
@@ -108,7 +122,7 @@ flowchart TD
    - Merges code-level inspection with script output logs to prove or disprove system capabilities.
    - Copies static CSS asset if missing: `mkdir -p docs/audits/html/assets && cp ~/.gemini/config/skills/scenario-probe/assets/audit.css docs/audits/html/assets/audit.css`.
    - **Pure Task Ledger (Markdown):** Writes `docs/audits/scenario-<scenario_slug>.md` containing ONLY actionable task items (P0, P1, P2) for 1-click transition into implementation planning.
-   - **Full Interactive Audit (HTML):** Populates and saves the comprehensive visual audit report to `docs/audits/html/scenario-<scenario_slug>.html`.
+   - **Full Interactive Audit (HTML):** Populates and saves the comprehensive visual audit report to `docs/audits/html/scenario-<scenario_slug>.html`, rendering the Task Flow stream, journey matrix, scorecard, and pillars.
 
 ---
 
@@ -116,18 +130,12 @@ flowchart TD
 
 ### Phase -1: Autonomous Domain & Architecture Ingestion
 1. Read the system's foundational specifications (`CONTEXT.md`, `PRODUCT.md`, `Architecture_Decision.md` or equivalent).
-2. Dynamically derive the **6 Core Domain Pillars** that govern this application (e.g., for an animation suite: Worldbuilding, Characters, Screenplay, Staging, Diffusion, Acoustics; for e-commerce: Catalog, Cart, Checkout, Payment, Inventory, Notifications).
+2. Dynamically derive the **6 Core Domain Pillars** that govern this application.
 
 ### Phase 0: Scenario Scope & Persona Synthesis
 1. Extract the core intent, creative seed, or business goal from `<XXX>`.
-2. Determine **Scope Granularity**:
-   - **Full-Lifecycle Journey:** Broad goals (e.g. creating an animation, building a world) trigger a full cold-start to final delivery walkthrough (Workspace -> Export).
-   - **Targeted Subsystem Slice:** Specific feature targets (e.g. inpainting, foley mixer, YouTube export) assume valid upstream entities and execute deep, surgical audits on that subsystem's controls, edge cases, and pre-flight gates.
-3. Apply the **Worst-Case Ambiguity Persona Principle**:
-   - **Default Archetype:** *The Zero-Detail Auteur*. High artistic/operational ambition, zero internal technical knowledge, no pre-written assets, and no prompt keywords.
-   - **Technical Exception:** If and only if `<XXX>` explicitly specifies technical parameters (e.g., specific weights, frame rates, or custom protocols), adopt the *Informed Technical Showrunner* archetype.
-   - **Initial State:** Directory setup, existing assets, credentials, hardware state.
-   - **Target Deliverable:** The concrete finished product or outcome the user wants to achieve.
+2. Determine **Scope Granularity** (Full-Lifecycle Journey vs. Targeted Subsystem Slice).
+3. Apply the **Worst-Case Ambiguity Persona Principle**.
 
 ### Phase 1: Intent Deconstruction & Pillar Mapping
 Deconstruct the ambiguous user seed into the 6 dynamically ingested domain pillars.
@@ -137,7 +145,10 @@ Deconstruct the ambiguous user seed into the 6 dynamically ingested domain pilla
 ### Phase 2: Deterministic Task Flow & Journey Generation
 Map the chronological path the user must take through the application:
 - Order steps linearly from initial state to target outcome.
-- Link each step to the intended view, screen, or interface state.
+- For each step, define the Trio:
+  1. **Ne yapmaya çalıştı?** (User Goal)
+  2. **Nerede yapmaya çalıştı?** (Target Surface / View)
+  3. **Ne oldu?** (System Reaction & Outcome)
 - **Interactive Check:** If `--interactive` or `-i` was passed, pause here to present the flow and confirm user ratification before proceeding to Phase 3. Otherwise, proceed seamlessly.
 
 ### Phase 3: Codebase & Runtime Step Simulation (Gap Audit)
@@ -154,16 +165,15 @@ For every single step in the journey, silently inspect the codebase and evaluate
 ### Phase 4: Dual Living Audit & Executive Scorecard
 1. **Asset & File Generation:**
    - Ensure `docs/audits/html/assets/audit.css` exists (copy once from global skill assets).
-   - Write **Full Interactive HTML**: `docs/audits/html/scenario-<scenario_slug>.html` (applying Cream-White `#FAF8F5` + Dark `#181716` + Terracotta `#C85A32` theme with complete matrix, scorecard, and pillars).
-   - Write **Pure Action Markdown Ledger**: `docs/audits/scenario-<scenario_slug>.md` containing EXCLUSIVELY the prioritized task ledger (P0, P1, P2) for direct planning handoff.
+   - Write **Full Interactive HTML**: `docs/audits/html/scenario-<scenario_slug>.html` (applying Cream-White `#FAF8F5` + Dark `#181716` + Terracotta `#C85A32` theme, featuring the visual Task Flow Stream with severity-based accent borders).
+   - Write **Pure Action Markdown Ledger**: `docs/audits/scenario-<scenario_slug>.md` containing EXCLUSIVELY the prioritized task ledger (P0, P1, P2) preserving 100% of diagnosed findings for direct planning handoff.
 2. **Multi-Dimensional Scorecard (0–100%):**
-   - **Directorial Guidance & Co-Pilot (Weight: 25%):** System assistance in turning vague ideas into concrete assets.
-   - **End-to-End Pipeline Completeness (Weight: 25%):** Can the deliverable actually be completed and exported?
-   - **Cognitive Ergonomics & Usability (Weight: 20%):** Level of friction, clarity of UI, and progressive disclosure.
-   - **Execution Determinism & Safety (Weight: 15%):** Hardware safety, invariant validation, and error resilience.
-   - **Output Consistency & Quality (Weight: 15%):** Fidelity, structural cohesion, and synchronization.
-   - **Overall System Readiness Score:** Weighted composite score.
-     * **Hard-Gate Enforced:** If any `[CRITICAL_BLOCKER]` exists, max score is strictly capped at **50%**.
+   - **Directorial Guidance & Co-Pilot (Weight: 25%)**
+   - **End-to-End Pipeline Completeness (Weight: 25%)**
+   - **Cognitive Ergonomics & Usability (Weight: 20%)**
+   - **Execution Determinism & Safety (Weight: 15%)**
+   - **Output Consistency & Quality (Weight: 15%)**
+   - **Overall System Readiness Score:** Weighted composite score (capped at 50% if P0 exists).
 3. **Prioritized Remediation Action Plan:**
    - **P0 (Critical Blockers):** Must-fix showstoppers preventing completion.
    - **P1 (High Friction & Guidance Gaps):** Missing smart defaults, co-pilot suggestion triggers, or confusing inputs.
@@ -176,8 +186,6 @@ For every single step in the journey, silently inspect the codebase and evaluate
 Immediately following the summary, conclude with a direct actionable transition prompt:
 > *"P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?"*  
 *(Or in English: "Would you like to begin the implementation plan to resolve the identified P0 critical blockers?")*
-
-Upon explicit user confirmation, seamlessly initiate the implementation workflow, adhering to deep module principles, boundary validation, and zero-wrapper architecture.
 
 ---
 
@@ -217,19 +225,30 @@ This file is intentionally stripped of analytical narrative and contains **ONLY*
 - **Required Resolution:** Explicit engineering fix.
 ```
 
-### 5.2 Chat Executive Summary
-```markdown
-# Scenario Probe: [Scenario Name]
-**Target Deliverable:** [Outcome] | **Scope Mode:** [Full-Lifecycle | Targeted Subsystem] | **Readiness Score:** [XX%]  
-**Action Task Ledger (Markdown):** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)  
-**Interactive Full Audit (HTML):** [docs/audits/html/scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)
-
-## Executive Summary & Scorecard
-- **Overall Readiness:** [XX]% (Hard-Gate applied if P0)
-- **Directorial Guidance & Co-Pilot:** [XX]%
-- **End-to-End Pipeline Completeness:** [XX]%
-- **P0 Blockers:** [X] | **P1 Friction Gaps:** [Y] | **P2 Polish:** [Z]
-
----
-**P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?**
+### 5.2 HTML Task Flow Step Card Schema
+Each step card in the visual timeline follows the trio layout:
+```html
+<div class="flow-step-card flow-step-[supported|friction|blocker|gap]">
+  <div class="flow-card-header">
+    <div class="flow-step-badge-group">
+      <span class="flow-step-number">01</span>
+      <span class="flow-step-title">[Step Title]</span>
+    </div>
+    <span class="status-badge status-[supported|friction|blocker|gap]">[STATUS]</span>
+  </div>
+  <div class="flow-trio-grid">
+    <div class="flow-trio-item">
+      <span class="flow-trio-label">Ne Yapmaya Çalıştı?</span>
+      <span class="flow-trio-content">[User Intent & Attempted Action]</span>
+    </div>
+    <div class="flow-trio-item">
+      <span class="flow-trio-label">Nerede Yapmaya Çalıştı?</span>
+      <span class="flow-trio-content">[View / UI Surface / Modal]</span>
+    </div>
+    <div class="flow-trio-item trio-outcome">
+      <span class="flow-trio-label">Ne Oldu?</span>
+      <span class="flow-trio-content">[System Reaction & Behavioral Reality]</span>
+    </div>
+  </div>
+</div>
 ```

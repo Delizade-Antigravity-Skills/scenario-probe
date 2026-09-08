@@ -16,7 +16,8 @@
     </a>
     <ul class="audit-nav-links">
       <li><a href="#overview">Overview</a></li>
-      <li><a href="#pillars">Domain Pillars</a></li>
+      <li><a href="#pillars">Pillars</a></li>
+      <li><a href="#flow">Task Flow</a></li>
       <li><a href="#journey">Journey Matrix</a></li>
       <li><a href="#scorecard">Scorecard</a></li>
       <li><a href="#remediation">Remediation</a></li>
@@ -30,10 +31,11 @@
         <div class="audit-meta-item">Scope: <strong>{{SCOPE_MODE}}</strong></div>
         <div class="audit-meta-item">Persona: <strong>{{PERSONA}}</strong></div>
         <div class="audit-meta-item">Date: <strong>{{DATE}}</strong></div>
+        <div class="audit-meta-item">Status: <strong>{{STATUS_SUMMARY}}</strong></div>
       </div>
       <h1 class="audit-title">{{SCENARIO_TITLE}}</h1>
       <div class="audit-intent-callout">
-        <span>Target Deliverable</span>
+        <span>Raw User Seed & Target Deliverable</span>
         {{TARGET_DELIVERABLE}}
       </div>
     </header>
@@ -46,9 +48,17 @@
       </div>
     </section>
 
-    <!-- Section 2: User Journey Matrix -->
+    <!-- Section 2: Task Flow / User Flow Stream -->
+    <section id="flow" class="audit-section">
+      <h2 class="audit-section-title">2. Step-by-Step Task Flow & User Flow Stream</h2>
+      <div class="flow-timeline">
+        {{FLOW_TIMELINE_HTML}}
+      </div>
+    </section>
+
+    <!-- Section 3: User Journey Matrix -->
     <section id="journey" class="audit-section">
-      <h2 class="audit-section-title">2. End-to-End User Journey Simulation Matrix</h2>
+      <h2 class="audit-section-title">3. End-to-End User Journey Simulation Matrix</h2>
       <div class="table-wrapper">
         <table class="audit-table">
           <thead>
@@ -67,9 +77,9 @@
       </div>
     </section>
 
-    <!-- Section 3: System Scorecard -->
+    <!-- Section 4: System Scorecard -->
     <section id="scorecard" class="audit-section">
-      <h2 class="audit-section-title">3. Multi-Dimensional System Scorecard</h2>
+      <h2 class="audit-section-title">4. Multi-Dimensional System Scorecard</h2>
       <div class="scorecard-container">
         <div class="scorecard-main">
           <div class="scorecard-value">{{OVERALL_SCORE}}%</div>
@@ -82,16 +92,16 @@
       </div>
     </section>
 
-    <!-- Section 4: Prioritized Remediation Plan -->
+    <!-- Section 5: Prioritized Remediation Plan -->
     <section id="remediation" class="audit-section">
-      <h2 class="audit-section-title">4. Prioritized Remediation Action Plan</h2>
+      <h2 class="audit-section-title">5. Prioritized Remediation Action Plan</h2>
       {{REMEDIATION_HTML}}
     </section>
 
     <!-- Remediation Handoff Banner -->
     <aside class="handoff-banner">
       <div class="handoff-text">
-        <h4>P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?</h4>
+        <h4>{{HANDOFF_PROMPT}}</h4>
         <p>Directorial sovereignty: High-impact remediation plan ready for autonomous execution.</p>
       </div>
       <a href="#remediation" class="handoff-button">Review Action Items</a>
