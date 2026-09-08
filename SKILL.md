@@ -24,6 +24,10 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="behavioral_scannability">
+    Present all matrix entries, status evaluations, and gap descriptions in clean, human-centric behavioral language. Describe exact user actions and system reactions clearly without cluttering the matrix with raw file links or code symbols. Keep the focus strictly on directorial UX, workflow mechanics, and functional gaps.
+  </directive>
+
   <directive id="autonomous_domain_ingestion">
     Never hardcode domain pillars. Dynamically ingest the target repository's domain ontology, architecture, and invariants by silently inspecting `CONTEXT.md`, `PRODUCT.md`, `package.json`, database schemas, and API routes.
   </directive>
@@ -38,10 +42,6 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
 
   <directive id="direct_remediation_handoff">
     Immediately following the audit report and scorecard, the agent must propose resolving the identified P0 critical blockers with a direct confirmation question. Upon user ratification, transition immediately into implementation planning and execution.
-  </directive>
-
-  <directive id="high_density_reporting">
-    Output findings with high token density: structured Markdown matrices, concrete file links (`file:///...`), direct UI component references, and prioritized remediation actions. Eliminate conversational fluff.
   </directive>
 </reasoning_constraints>
 
@@ -77,7 +77,7 @@ flowchart TD
    - Silently inspects repository manifests (`package.json`, `pyproject.toml`, `Cargo.toml`), documentation (`CONTEXT.md`, `PRODUCT.md`, `README.md`), and core routes/schemas.
    - Synthesizes the 6 Domain Invariant Pillars specific to the active system.
 2. **Layer 1 — Deep Static Traversal (Default):**
-   - Autonomously inspects component trees, API contracts, Zod schemas, state stores, and domain services.
+   - Autonomously inspects component trees, API contracts, Zod schemas, state stores, and domain services under the hood.
    - Verifies whether UI primitives exist in `src/components/ui` or views to satisfy each user need.
 3. **Layer 2 — Headless Runtime Verification:**
    - Where deterministic mathematical, hardware, or lifecycle invariants are concerned, inspect and run relevant repository verification scripts (e.g., `npx tsx scripts/verify-*.ts` or npm test commands).
@@ -115,10 +115,9 @@ Map the chronological path the user must take through the application:
 ### Phase 3: Codebase & Runtime Step Simulation (Gap Audit)
 For every single step in the journey, silently inspect the codebase and evaluate:
 1. **User Action & Input:** Exactly what the user attempts to enter, click, or configure (constrained by the Persona's knowledge).
-2. **UI Primitive / Interface Availability:** Which component in `src/components/ui` or views handles this? Does it provide smart defaults or co-pilot guidance, or does it present an empty, intimidating input?
-3. **Under-the-Hood Backend Seam:** Which API route, domain service, or database table is triggered?
-4. **Runtime Verification:** If an automated test/verification script exists for this seam, execute it or verify its latest assertions.
-5. **Classification Status:**
+2. **System Response & UI Behavior:** How does the interface react? Does it provide smart defaults and co-pilot guidance, or does it leave the user stranded with blank inputs?
+3. **Runtime Verification:** Silently verify backend seams, state transitions, and test scripts.
+4. **Classification Status:**
    - `[SUPPORTED]` — Fully operational, guided, and verifiable in code.
    - `[HIGH_FRICTION]` — Possible, but suffers from steep cognitive load, lack of smart defaults, or complex manual inputs.
    - `[SYSTEM_GAP]` — Required sub-need is completely missing or unsupported in the current codebase.
@@ -165,11 +164,11 @@ The generated document in `docs/audits/scenario-<slug>.md` and the chat response
 [Breakdown across domain pillars + anticipated cognitive hurdles]
 
 ## 3. End-to-End User Journey Simulation Matrix
-| Step | User Action | Interface / View | Under-the-Hood Seam | Status | Friction / Gap Analysis |
-|:---|:---|:---|:---|:---|:---|
-| 1 | ... | ... | ... | `[SUPPORTED]` | ... |
-| 2 | ... | ... | ... | `[HIGH_FRICTION]` | ... |
-| 3 | ... | ... | ... | `[CRITICAL_BLOCKER]` | ... |
+| Step | User Action & Input | System Reaction & Interface | Status | Directorial Friction & Gap Analysis |
+|:---|:---|:---|:---|:---|
+| 1 | ... | ... | `[SUPPORTED]` | ... |
+| 2 | ... | ... | `[HIGH_FRICTION]` | ... |
+| 3 | ... | ... | `[CRITICAL_BLOCKER]` | ... |
 
 ## 4. System Scorecard
 - **Directorial Guidance & Co-Pilot:** [XX]% — [Brief rationale]
@@ -181,11 +180,11 @@ The generated document in `docs/audits/scenario-<slug>.md` and the chat response
 
 ## 5. Prioritized Remediation Action Plan
 ### P0 — Critical Blockers (Showstoppers)
-- [ ] **[File / Seam]**: Description of fix.
+- [ ] **[Component / Area]**: Clear behavioral description of what must be resolved.
 ### P1 — High Friction & Guidance Gaps (Co-Pilot)
-- [ ] **[File / Seam]**: Description of improvement.
+- [ ] **[Component / Area]**: Clear behavioral description of the needed guidance/default.
 ### P2 — Usability & Polish
-- [ ] **[File / Seam]**: Description of refinement.
+- [ ] **[Component / Area]**: Refinement description.
 
 ---
 **P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?**
