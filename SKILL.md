@@ -30,28 +30,23 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     - **Targeted Subsystem Slice:** Specific feature targets (e.g. inpainting, foley mixer, YouTube export) assume valid upstream entities and execute deep, surgical audits on that subsystem's controls, edge cases, and pre-flight gates.
   </directive>
 
-  <directive id="execution_autonomy_modes">
-    - **Default (One-Shot Flow):** Execute Phase -1 through Phase 5 autonomously in a single pass without interrupting the user.
-    - **Interactive Flag (`--interactive` / `-i`):** Pause after Phase 2 (Task Flow Generation) to present the synthesized flow and confirm directorial approval or adjustments before proceeding to Phase 3.
+  <directive id="pure_action_markdown_ledger">
+    The generated Markdown file at `docs/audits/scenario-<scenario_slug>.md` must serve strictly as a **Pure Remediation Task Ledger**. It MUST contain ONLY the prioritized work items (P0, P1, P2) formatted as clean, implementation-ready specifications. All matrices, pillars, scorecards, and analytical narrative belong exclusively in the rich HTML report (`docs/audits/html/scenario-<scenario_slug>.html`). This enables the user to immediately ask the agent to 'detail this base file into an implementation plan' without noise or distraction.
   </directive>
 
   <directive id="token_economic_html_reporting">
-    Generate co-existing Markdown (`docs/audits/scenario-<slug>.md`) and rich HTML (`docs/audits/html/scenario-<slug>.html`).
+    Generate rich HTML at `docs/audits/html/scenario-<slug>.html`.
     - **Static CSS Asset Protection:** NEVER generate or inline large CSS blocks in responses. Ensure static CSS is copied once to `docs/audits/html/assets/audit.css` from the global skill assets.
     - **Editorial Strict Palette:** Light cream white (`#FAF8F5`) + Dark charcoal (`#181716`) + Single Accent: Warm Terracotta (`#C85A32`).
     - **Navigation:** Sticky top header with section anchor links (`#overview`, `#pillars`, `#journey`, `#scorecard`, `#remediation`).
   </directive>
 
   <directive id="behavioral_scannability">
-    Present all matrix entries, status evaluations, and gap descriptions in clean, human-centric behavioral language. Describe exact user actions and system reactions clearly without cluttering the matrix with raw file links or code symbols. Keep the focus strictly on directorial UX, workflow mechanics, and functional gaps.
+    Present all matrix entries in the HTML report in clean, human-centric behavioral language. Describe exact user actions and system reactions clearly without cluttering the view with raw file links or code symbols. Keep the focus strictly on directorial UX, workflow mechanics, and functional gaps.
   </directive>
 
   <directive id="autonomous_domain_ingestion">
     Never hardcode domain pillars. Dynamically ingest the target repository's domain ontology, architecture, and invariants by silently inspecting `CONTEXT.md`, `PRODUCT.md`, `package.json`, database schemas, and API routes.
-  </directive>
-
-  <directive id="living_single_file_audit">
-    Maintain a clean, non-polluting audit ledger. Every scenario writes to a canonical living file at `docs/audits/scenario-<scenario_slug>.md` and `docs/audits/html/scenario-<scenario_slug>.html`. Re-running updates in place, delegating history cleanly to Git.
   </directive>
 
   <directive id="hard_gate_scoring_doctrine">
@@ -95,7 +90,7 @@ flowchart TD
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
     Layer2 --> Synthesize
     Synthesize --> AssetSync["Asset Sync: Ensure docs/audits/html/assets/audit.css exists"]
-    AssetSync --> DocGen["Write docs/audits/scenario-<slug>.md & docs/audits/html/scenario-<slug>.html"]
+    AssetSync --> DocGen["Write docs/audits/scenario-<slug>.md (Pure Task Ledger)<br/>& docs/audits/html/scenario-<slug>.html (Full Audit)"]
     DocGen --> ChatSummary["Deliver Executive Summary & Clickable Links in Chat"]
     ChatSummary --> RemediationPrompt["Prompt Direct Remediation Handoff for P0 Blockers"]
 ```
@@ -112,8 +107,8 @@ flowchart TD
 4. **Layer 3 — Evidence Synthesis & Dual In-Repo Living Audit:**
    - Merges code-level inspection with script output logs to prove or disprove system capabilities.
    - Copies static CSS asset if missing: `mkdir -p docs/audits/html/assets && cp ~/.gemini/config/skills/scenario-probe/assets/audit.css docs/audits/html/assets/audit.css`.
-   - Writes the Markdown report to `docs/audits/scenario-<scenario_slug>.md`.
-   - Populates and saves the HTML report to `docs/audits/html/scenario-<scenario_slug>.html`.
+   - **Pure Task Ledger (Markdown):** Writes `docs/audits/scenario-<scenario_slug>.md` containing ONLY actionable task items (P0, P1, P2) for 1-click transition into implementation planning.
+   - **Full Interactive Audit (HTML):** Populates and saves the comprehensive visual audit report to `docs/audits/html/scenario-<scenario_slug>.html`.
 
 ---
 
@@ -159,8 +154,8 @@ For every single step in the journey, silently inspect the codebase and evaluate
 ### Phase 4: Dual Living Audit & Executive Scorecard
 1. **Asset & File Generation:**
    - Ensure `docs/audits/html/assets/audit.css` exists (copy once from global skill assets).
-   - Write canonical Markdown: `docs/audits/scenario-<scenario_slug>.md`.
-   - Write HTML report: `docs/audits/html/scenario-<scenario_slug>.html` (applying Cream-White `#FAF8F5` + Dark `#181716` + Terracotta `#C85A32` theme).
+   - Write **Full Interactive HTML**: `docs/audits/html/scenario-<scenario_slug>.html` (applying Cream-White `#FAF8F5` + Dark `#181716` + Terracotta `#C85A32` theme with complete matrix, scorecard, and pillars).
+   - Write **Pure Action Markdown Ledger**: `docs/audits/scenario-<scenario_slug>.md` containing EXCLUSIVELY the prioritized task ledger (P0, P1, P2) for direct planning handoff.
 2. **Multi-Dimensional Scorecard (0–100%):**
    - **Directorial Guidance & Co-Pilot (Weight: 25%):** System assistance in turning vague ideas into concrete assets.
    - **End-to-End Pipeline Completeness (Weight: 25%):** Can the deliverable actually be completed and exported?
@@ -174,8 +169,8 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - **P1 (High Friction & Guidance Gaps):** Missing smart defaults, co-pilot suggestion triggers, or confusing inputs.
    - **P2 (Deepening & Polish):** Usability refinements, visual ergonomics, and telemetry feedback.
 4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with dual clickable links:
-   - `[Living Markdown Report](file://docs/audits/scenario-<slug>.md)`
-   - `[Interactive HTML Report](file://docs/audits/html/scenario-<slug>.html)`
+   - `[Action Task Ledger (MD)](file://docs/audits/scenario-<slug>.md)`
+   - `[Interactive Full Audit (HTML)](file://docs/audits/html/scenario-<slug>.html)`
 
 ### Phase 5: Direct Remediation Hand-off
 Immediately following the summary, conclude with a direct actionable transition prompt:
@@ -186,44 +181,54 @@ Upon explicit user confirmation, seamlessly initiate the implementation workflow
 
 ---
 
-## 5. Standard Output Schema
+## 5. Output Schemas
 
-The generated documents and chat response must follow this structure:
+### 5.1 Pure Action Markdown Ledger (`docs/audits/scenario-<slug>.md`)
+This file is intentionally stripped of analytical narrative and contains **ONLY** the implementation task ledger:
 
 ```markdown
+# Remediation Task Ledger: [Scenario Name]
+**Target Deliverable:** [Deliverable]  
+**Full Audit HTML:** [docs/audits/html/scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)  
+**Readiness Score:** [XX%]  
+
+---
+
+## P0 — Critical Blockers (Showstoppers)
+### [TASK-P0-01] [Task Title]
+- **Subsystem / Files:** `path/to/file`
+- **Current Friction / Blocker:** Clear problem statement.
+- **Required Resolution:** Explicit engineering fix.
+
+---
+
+## P1 — High Friction & Guidance Gaps (Co-Pilot)
+### [TASK-P1-01] [Task Title]
+- **Subsystem / Files:** `path/to/file`
+- **Current Friction / Blocker:** Clear problem statement.
+- **Required Resolution:** Explicit engineering fix.
+
+---
+
+## P2 — Usability & Refinements
+### [TASK-P2-01] [Task Title]
+- **Subsystem / Files:** `path/to/file`
+- **Current Friction / Blocker:** Clear problem statement.
+- **Required Resolution:** Explicit engineering fix.
+```
+
+### 5.2 Chat Executive Summary
+```markdown
 # Scenario Probe: [Scenario Name]
-**Target Deliverable:** [Outcome] | **Scope Mode:** [Full-Lifecycle | Targeted Subsystem] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
-**Living Markdown:** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)  
-**Interactive HTML:** [docs/audits/html/scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)
+**Target Deliverable:** [Outcome] | **Scope Mode:** [Full-Lifecycle | Targeted Subsystem] | **Readiness Score:** [XX%]  
+**Action Task Ledger (Markdown):** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)  
+**Interactive Full Audit (HTML):** [docs/audits/html/scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)
 
-## 1. Domain Ontology & System Pillars
-[Ingested domain type and 6 derived core pillars]
-
-## 2. Scenario Intent & Sub-Needs Deconstruction
-[Breakdown across domain pillars + anticipated cognitive hurdles]
-
-## 3. End-to-End User Journey Simulation Matrix
-| Step | User Action & Input | System Reaction & Interface | Status | Directorial Friction & Gap Analysis |
-|:---|:---|:---|:---|:---|
-| 1 | ... | ... | `[SUPPORTED]` | ... |
-| 2 | ... | ... | `[HIGH_FRICTION]` | ... |
-| 3 | ... | ... | `[CRITICAL_BLOCKER]` | ... |
-
-## 4. System Scorecard
-- **Directorial Guidance & Co-Pilot:** [XX]% — [Brief rationale]
-- **End-to-End Pipeline Completeness:** [XX]% — [Brief rationale]
-- **Cognitive Ergonomics & Usability:** [XX]% — [Brief rationale]
-- **Execution Determinism & Safety:** [XX]% — [Brief rationale]
-- **Output Consistency & Quality:** [XX]% — [Brief rationale]
-**Overall System Readiness Score:** **[XX]%** [Note if capped at 50% due to P0 blocker]
-
-## 5. Prioritized Remediation Action Plan
-### P0 — Critical Blockers (Showstoppers)
-- [ ] **[Component / Area]**: Clear behavioral description of what must be resolved.
-### P1 — High Friction & Guidance Gaps (Co-Pilot)
-- [ ] **[Component / Area]**: Clear behavioral description of the needed guidance/default.
-### P2 — Usability & Polish
-- [ ] **[Component / Area]**: Refinement description.
+## Executive Summary & Scorecard
+- **Overall Readiness:** [XX]% (Hard-Gate applied if P0)
+- **Directorial Guidance & Co-Pilot:** [XX]%
+- **End-to-End Pipeline Completeness:** [XX]%
+- **P0 Blockers:** [X] | **P1 Friction Gaps:** [Y] | **P2 Polish:** [Z]
 
 ---
 **P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?**
