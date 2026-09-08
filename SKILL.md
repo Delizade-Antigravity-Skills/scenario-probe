@@ -24,6 +24,10 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="localized_output_imperative">
+    When the user prompts in Turkish (or when requested), author the entire HTML report (`docs/audits/html/scenario-<slug>.html`) and the Markdown task ledger (`docs/audits/scenario-<slug>.md`) strictly and completely in fluent, professional Turkish (nav items, pillars, trio flow grid, matrix columns, scorecard labels, remediation items, and handoff banner).
+  </directive>
+
   <directive id="zero_information_loss_and_plan_parity">
     Every single friction point, failure, and blocker diagnosed during the simulation MUST be preserved with 100% fidelity across both deliverables:
     - In the HTML: Rendered in the Step-by-Step Task Flow Stream and Journey Matrix.
@@ -172,7 +176,7 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - **End-to-End Pipeline Completeness (Weight: 25%)**
    - **Cognitive Ergonomics & Usability (Weight: 20%)**
    - **Execution Determinism & Safety (Weight: 15%)**
-   - **Output Consistency & Quality (Weight: 15%)**
+   - **Output Consistency & Quality (Weight: 15%):** Fidelity, structural cohesion, and synchronization.
    - **Overall System Readiness Score:** Weighted composite score (capped at 50% if P0 exists).
 3. **Prioritized Remediation Action Plan:**
    - **P0 (Critical Blockers):** Must-fix showstoppers preventing completion.
@@ -185,69 +189,65 @@ For every single step in the journey, silently inspect the codebase and evaluate
 ### Phase 5: Direct Remediation Hand-off
 Immediately following the summary, conclude with a direct actionable transition prompt:
 > *"P0 kritik engelleyicilerini çözmek için implementasyona başlayalım mı?"*  
-*(Or in English: "Would you like to begin the implementation plan to resolve the identified P0 critical blockers?")*
 
 ---
 
 ## 5. Output Schemas
 
 ### 5.1 Pure Action Markdown Ledger (`docs/audits/scenario-<slug>.md`)
-This file is intentionally stripped of analytical narrative and contains **ONLY** the implementation task ledger:
-
 ```markdown
-# Remediation Task Ledger: [Scenario Name]
-**Target Deliverable:** [Deliverable]  
-**Full Audit HTML:** [docs/audits/html/scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)  
-**Readiness Score:** [XX%]  
+# İyileştirme Görev Kütüğü: [Senaryo Adı]
+**Hedef Çıktı:** [Hedef]  
+**Tam Denetim HTML Raporu:** [scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)  
+**Genel Hazırlık Skoru:** [%XX]  
 
 ---
 
-## P0 — Critical Blockers (Showstoppers)
-### [TASK-P0-01] [Task Title]
-- **Subsystem / Files:** `path/to/file`
-- **Current Friction / Blocker:** Clear problem statement.
-- **Required Resolution:** Explicit engineering fix.
+## P0 — Kritik Engelleyiciler (Durdurucu Hatalar)
+### [TASK-P0-01] [Görev Başlığı]
+- **İlgili Dosyalar / Alt Sistem:** `dosya/yolu`
+- **Mevcut Sürtünme / Engel:** Net problem tanımı.
+- **Gerekli Çözüm:** Kesin mühendislik çözümü.
 
 ---
 
-## P1 — High Friction & Guidance Gaps (Co-Pilot)
-### [TASK-P1-01] [Task Title]
-- **Subsystem / Files:** `path/to/file`
-- **Current Friction / Blocker:** Clear problem statement.
-- **Required Resolution:** Explicit engineering fix.
+## P1 — Yüksek Sürtünme ve Rehberlik Boşlukları (Co-Pilot)
+### [TASK-P1-01] [Görev Başlığı]
+- **İlgili Dosyalar / Alt Sistem:** `dosya/yolu`
+- **Mevcut Sürtünme / Engel:** Net problem tanımı.
+- **Gerekli Çözüm:** Kesin mühendislik çözümü.
 
 ---
 
-## P2 — Usability & Refinements
-### [TASK-P2-01] [Task Title]
-- **Subsystem / Files:** `path/to/file`
-- **Current Friction / Blocker:** Clear problem statement.
-- **Required Resolution:** Explicit engineering fix.
+## P2 — Kullanılabilirlik ve İnce Ayar
+### [TASK-P2-01] [Görev Başlığı]
+- **İlgili Dosyalar / Alt Sistem:** `dosya/yolu`
+- **Mevcut Sürtünme / Engel:** Net problem tanımı.
+- **Gerekli Çözüm:** Kesin mühendislik çözümü.
 ```
 
 ### 5.2 HTML Task Flow Step Card Schema
-Each step card in the visual timeline follows the trio layout:
 ```html
 <div class="flow-step-card flow-step-[supported|friction|blocker|gap]">
   <div class="flow-card-header">
     <div class="flow-step-badge-group">
       <span class="flow-step-number">01</span>
-      <span class="flow-step-title">[Step Title]</span>
+      <span class="flow-step-title">[Adım Başlığı]</span>
     </div>
-    <span class="status-badge status-[supported|friction|blocker|gap]">[STATUS]</span>
+    <span class="status-badge status-[supported|friction|blocker|gap]">[DURUM]</span>
   </div>
   <div class="flow-trio-grid">
     <div class="flow-trio-item">
       <span class="flow-trio-label">Ne Yapmaya Çalıştı?</span>
-      <span class="flow-trio-content">[User Intent & Attempted Action]</span>
+      <span class="flow-trio-content">[Kullanıcı Hedefi & Eylemi]</span>
     </div>
     <div class="flow-trio-item">
       <span class="flow-trio-label">Nerede Yapmaya Çalıştı?</span>
-      <span class="flow-trio-content">[View / UI Surface / Modal]</span>
+      <span class="flow-trio-content">[Arayüz Görünümü / Bileşeni]</span>
     </div>
     <div class="flow-trio-item trio-outcome">
       <span class="flow-trio-label">Ne Oldu?</span>
-      <span class="flow-trio-content">[System Reaction & Behavioral Reality]</span>
+      <span class="flow-trio-content">[Sistem Tepkisi & Sonuç]</span>
     </div>
   </div>
 </div>
