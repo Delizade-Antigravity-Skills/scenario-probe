@@ -9,25 +9,33 @@ ACTION="${1:-push}"
 
 case "$ACTION" in
   install|to-global)
-    echo "Syncing repository SKILL.md to global Antigravity config..."
-    mkdir -p "$GLOBAL_SKILL_DIR"
+    echo "Syncing repository SKILL.md and assets to global Antigravity config..."
+    mkdir -p "$GLOBAL_SKILL_DIR/assets"
     cp "$REPO_DIR/SKILL.md" "$GLOBAL_SKILL_DIR/SKILL.md"
-    echo "Installed to $GLOBAL_SKILL_DIR/SKILL.md"
+    cp -r "$REPO_DIR/assets/"* "$GLOBAL_SKILL_DIR/assets/"
+    echo "Installed to $GLOBAL_SKILL_DIR"
     ;;
   from-global)
-    echo "Syncing global Antigravity config SKILL.md to local repository..."
+    echo "Syncing global Antigravity config SKILL.md and assets to local repository..."
     if [[ -f "$GLOBAL_SKILL_DIR/SKILL.md" ]]; then
       cp "$GLOBAL_SKILL_DIR/SKILL.md" "$REPO_DIR/SKILL.md"
-      echo "Copied from $GLOBAL_SKILL_DIR/SKILL.md to $REPO_DIR/SKILL.md"
+      if [[ -d "$GLOBAL_SKILL_DIR/assets" ]]; then
+        mkdir -p "$REPO_DIR/assets"
+        cp -r "$GLOBAL_SKILL_DIR/assets/"* "$REPO_DIR/assets/"
+      fi
+      echo "Copied from $GLOBAL_SKILL_DIR to $REPO_DIR"
     else
       echo "Error: Global SKILL.md not found at $GLOBAL_SKILL_DIR/SKILL.md"
       exit 1
     fi
     ;;
   push)
-    echo "Syncing SKILL.md from repo to global, committing, and pushing to GitHub..."
-    mkdir -p "$GLOBAL_SKILL_DIR"
+    echo "Syncing to global, committing, and pushing to GitHub..."
+    mkdir -p "$GLOBAL_SKILL_DIR/assets"
     cp "$REPO_DIR/SKILL.md" "$GLOBAL_SKILL_DIR/SKILL.md"
+    if [[ -d "$REPO_DIR/assets" ]]; then
+      cp -r "$REPO_DIR/assets/"* "$GLOBAL_SKILL_DIR/assets/"
+    fi
     cd "$REPO_DIR"
     git add .
     if git diff-index --quiet HEAD --; then

@@ -35,6 +35,13 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     - **Interactive Flag (`--interactive` / `-i`):** Pause after Phase 2 (Task Flow Generation) to present the synthesized flow and confirm directorial approval or adjustments before proceeding to Phase 3.
   </directive>
 
+  <directive id="token_economic_html_reporting">
+    Generate co-existing Markdown (`docs/audits/scenario-<slug>.md`) and rich HTML (`docs/audits/html/scenario-<slug>.html`).
+    - **Static CSS Asset Protection:** NEVER generate or inline large CSS blocks in responses. Ensure static CSS is copied once to `docs/audits/html/assets/audit.css` from the global skill assets.
+    - **Editorial Strict Palette:** Light cream white (`#FAF8F5`) + Dark charcoal (`#181716`) + Single Accent: Warm Terracotta (`#C85A32`).
+    - **Navigation:** Sticky top header with section anchor links (`#overview`, `#pillars`, `#journey`, `#scorecard`, `#remediation`).
+  </directive>
+
   <directive id="behavioral_scannability">
     Present all matrix entries, status evaluations, and gap descriptions in clean, human-centric behavioral language. Describe exact user actions and system reactions clearly without cluttering the matrix with raw file links or code symbols. Keep the focus strictly on directorial UX, workflow mechanics, and functional gaps.
   </directive>
@@ -44,7 +51,7 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
   </directive>
 
   <directive id="living_single_file_audit">
-    Maintain a clean, non-polluting audit ledger. Every scenario writes to a canonical living file at `docs/audits/scenario-<scenario_slug>.md`. Re-running a scenario updates this living document in place, delegating historical diffs and score trends cleanly to Git.
+    Maintain a clean, non-polluting audit ledger. Every scenario writes to a canonical living file at `docs/audits/scenario-<scenario_slug>.md` and `docs/audits/html/scenario-<scenario_slug>.html`. Re-running updates in place, delegating history cleanly to Git.
   </directive>
 
   <directive id="hard_gate_scoring_doctrine">
@@ -87,8 +94,9 @@ flowchart TD
     SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
     Layer2 --> Synthesize
-    Synthesize --> InRepoDoc["Update Canonical Living Audit in docs/audits/scenario-<slug>.md"]
-    InRepoDoc --> ChatSummary["Deliver Executive Summary & Clickable File Link in Chat"]
+    Synthesize --> AssetSync["Asset Sync: Ensure docs/audits/html/assets/audit.css exists"]
+    AssetSync --> DocGen["Write docs/audits/scenario-<slug>.md & docs/audits/html/scenario-<slug>.html"]
+    DocGen --> ChatSummary["Deliver Executive Summary & Clickable Links in Chat"]
     ChatSummary --> RemediationPrompt["Prompt Direct Remediation Handoff for P0 Blockers"]
 ```
 
@@ -101,9 +109,11 @@ flowchart TD
 3. **Layer 2 — Headless Runtime Verification:**
    - Where deterministic mathematical, hardware, or lifecycle invariants are concerned, inspect and run relevant repository verification scripts (e.g., `npx tsx scripts/verify-*.ts` or npm test commands).
    - Validates that state transitions, DB migrations, and hardware locks actually pass under live execution conditions.
-4. **Layer 3 — Evidence Synthesis & In-Repo Living Audit:**
+4. **Layer 3 — Evidence Synthesis & Dual In-Repo Living Audit:**
    - Merges code-level inspection with script output logs to prove or disprove system capabilities.
-   - Updates the canonical living audit file at `docs/audits/scenario-<scenario_slug>.md`.
+   - Copies static CSS asset if missing: `mkdir -p docs/audits/html/assets && cp ~/.gemini/config/skills/scenario-probe/assets/audit.css docs/audits/html/assets/audit.css`.
+   - Writes the Markdown report to `docs/audits/scenario-<scenario_slug>.md`.
+   - Populates and saves the HTML report to `docs/audits/html/scenario-<scenario_slug>.html`.
 
 ---
 
@@ -146,8 +156,11 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - `[SYSTEM_GAP]` — Required sub-need is completely missing or unsupported in the current codebase.
    - `[CRITICAL_BLOCKER]` — Dead-end; halts progress, crashes, or fails invariant pre-flight checks. (Triggers Hard-Gate scoring rule).
 
-### Phase 4: Canonical Living Audit & Executive Scorecard
-1. **Living File Generation:** Create the target folder if missing (`mkdir -p docs/audits`) and update the canonical report at `docs/audits/scenario-<scenario_slug>.md`.
+### Phase 4: Dual Living Audit & Executive Scorecard
+1. **Asset & File Generation:**
+   - Ensure `docs/audits/html/assets/audit.css` exists (copy once from global skill assets).
+   - Write canonical Markdown: `docs/audits/scenario-<scenario_slug>.md`.
+   - Write HTML report: `docs/audits/html/scenario-<scenario_slug>.html` (applying Cream-White `#FAF8F5` + Dark `#181716` + Terracotta `#C85A32` theme).
 2. **Multi-Dimensional Scorecard (0–100%):**
    - **Directorial Guidance & Co-Pilot (Weight: 25%):** System assistance in turning vague ideas into concrete assets.
    - **End-to-End Pipeline Completeness (Weight: 25%):** Can the deliverable actually be completed and exported?
@@ -160,7 +173,9 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - **P0 (Critical Blockers):** Must-fix showstoppers preventing completion.
    - **P1 (High Friction & Guidance Gaps):** Missing smart defaults, co-pilot suggestion triggers, or confusing inputs.
    - **P2 (Deepening & Polish):** Usability refinements, visual ergonomics, and telemetry feedback.
-4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with a direct markdown link to the physical file: `[Full Audit Report](file://docs/audits/scenario-<slug>.md)`.
+4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with dual clickable links:
+   - `[Living Markdown Report](file://docs/audits/scenario-<slug>.md)`
+   - `[Interactive HTML Report](file://docs/audits/html/scenario-<slug>.html)`
 
 ### Phase 5: Direct Remediation Hand-off
 Immediately following the summary, conclude with a direct actionable transition prompt:
@@ -173,12 +188,13 @@ Upon explicit user confirmation, seamlessly initiate the implementation workflow
 
 ## 5. Standard Output Schema
 
-The generated document in `docs/audits/scenario-<slug>.md` and the chat response must follow this structure:
+The generated documents and chat response must follow this structure:
 
 ```markdown
 # Scenario Probe: [Scenario Name]
 **Target Deliverable:** [Outcome] | **Scope Mode:** [Full-Lifecycle | Targeted Subsystem] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
-**Living Audit File:** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)
+**Living Markdown:** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)  
+**Interactive HTML:** [docs/audits/html/scenario-slug.html](file:///path/to/docs/audits/html/scenario-slug.html)
 
 ## 1. Domain Ontology & System Pillars
 [Ingested domain type and 6 derived core pillars]
