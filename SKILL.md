@@ -28,12 +28,12 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Never hardcode domain pillars. Dynamically ingest the target repository's domain ontology, architecture, and invariants by silently inspecting `CONTEXT.md`, `PRODUCT.md`, `package.json`, database schemas, and API routes.
   </directive>
 
-  <directive id="hard_gate_scoring_doctrine">
-    If ANY step encounters a `[CRITICAL_BLOCKER]` (P0), the Overall System Readiness Score is unconditionally capped at a maximum of **50%**. However, the simulation MUST NOT terminate early; it must continue evaluating downstream steps under a hypothetical pass assumption to expose all latent gaps across the entire lifecycle.
+  <directive id="living_single_file_audit">
+    Maintain a clean, non-polluting audit ledger. Every scenario writes to a canonical living file at `docs/audits/scenario-<scenario_slug>.md`. Re-running a scenario updates this living document in place, delegating historical diffs and score trends cleanly to Git.
   </directive>
 
-  <directive id="in_repo_persistent_audit">
-    Every scenario simulation must automatically generate a physical audit document in the repository at `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`. The chat response must provide a concise executive summary and link directly to this physical file.
+  <directive id="hard_gate_scoring_doctrine">
+    If ANY step encounters a `[CRITICAL_BLOCKER]` (P0), the Overall System Readiness Score is unconditionally capped at a maximum of **50%**. However, the simulation MUST NOT terminate early; it must continue evaluating downstream steps under a hypothetical pass assumption to expose all latent gaps across the entire lifecycle.
   </directive>
 
   <directive id="direct_remediation_handoff">
@@ -68,7 +68,7 @@ flowchart TD
     SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
     Layer2 --> Synthesize
-    Synthesize --> InRepoDoc["Write Physical Audit to docs/audits/scenario-*.md"]
+    Synthesize --> InRepoDoc["Update Canonical Living Audit in docs/audits/scenario-<slug>.md"]
     InRepoDoc --> ChatSummary["Deliver Executive Summary & Clickable File Link in Chat"]
     ChatSummary --> RemediationPrompt["Prompt Direct Remediation Handoff for P0 Blockers"]
 ```
@@ -82,9 +82,9 @@ flowchart TD
 3. **Layer 2 — Headless Runtime Verification:**
    - Where deterministic mathematical, hardware, or lifecycle invariants are concerned, inspect and run relevant repository verification scripts (e.g., `npx tsx scripts/verify-*.ts` or npm test commands).
    - Validates that state transitions, DB migrations, and hardware locks actually pass under live execution conditions.
-4. **Layer 3 — Evidence Synthesis & In-Repo Persistence:**
+4. **Layer 3 — Evidence Synthesis & In-Repo Living Audit:**
    - Merges code-level inspection with script output logs to prove or disprove system capabilities.
-   - Writes the full audit report into `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`.
+   - Updates the canonical living audit file at `docs/audits/scenario-<scenario_slug>.md`.
 
 ---
 
@@ -124,8 +124,8 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - `[SYSTEM_GAP]` — Required sub-need is completely missing or unsupported in the current codebase.
    - `[CRITICAL_BLOCKER]` — Dead-end; halts progress, crashes, or fails invariant pre-flight checks. (Triggers Hard-Gate scoring rule).
 
-### Phase 4: In-Repo Documentation & Executive Scorecard
-1. **Physical File Generation:** Create the target folder if missing (`mkdir -p docs/audits`) and write the comprehensive report to `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`.
+### Phase 4: Canonical Living Audit & Executive Scorecard
+1. **Living File Generation:** Create the target folder if missing (`mkdir -p docs/audits`) and update the canonical report at `docs/audits/scenario-<scenario_slug>.md`.
 2. **Multi-Dimensional Scorecard (0–100%):**
    - **Directorial Guidance & Co-Pilot (Weight: 25%):** System assistance in turning vague ideas into concrete assets.
    - **End-to-End Pipeline Completeness (Weight: 25%):** Can the deliverable actually be completed and exported?
@@ -138,7 +138,7 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - **P0 (Critical Blockers):** Must-fix showstoppers preventing completion.
    - **P1 (High Friction & Guidance Gaps):** Missing smart defaults, co-pilot suggestion triggers, or confusing inputs.
    - **P2 (Deepening & Polish):** Usability refinements, visual ergonomics, and telemetry feedback.
-4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with a direct markdown link to the physical file: `[Full Audit Report](file://docs/audits/...)`.
+4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with a direct markdown link to the physical file: `[Full Audit Report](file://docs/audits/scenario-<slug>.md)`.
 
 ### Phase 5: Direct Remediation Hand-off
 Immediately following the summary, conclude with a direct actionable transition prompt:
@@ -151,12 +151,12 @@ Upon explicit user confirmation, seamlessly initiate the implementation workflow
 
 ## 5. Standard Output Schema
 
-The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the chat response must follow this structure:
+The generated document in `docs/audits/scenario-<slug>.md` and the chat response must follow this structure:
 
 ```markdown
 # Scenario Probe: [Scenario Name]
 **Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
-**Physical Audit File:** [docs/audits/scenario-slug-timestamp.md](file:///path/to/docs/audits/scenario-slug-timestamp.md)
+**Living Audit File:** [docs/audits/scenario-slug.md](file:///path/to/docs/audits/scenario-slug.md)
 
 ## 1. Domain Ontology & System Pillars
 [Ingested domain type and 6 derived core pillars]
