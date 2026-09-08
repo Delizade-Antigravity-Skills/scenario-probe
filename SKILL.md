@@ -24,6 +24,10 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="autonomous_domain_ingestion">
+    Never hardcode domain pillars. Dynamically ingest the target repository's domain ontology, architecture, and invariants by silently inspecting `CONTEXT.md`, `PRODUCT.md`, `package.json`, database schemas, and API routes.
+  </directive>
+
   <directive id="hard_gate_scoring_doctrine">
     If ANY step encounters a `[CRITICAL_BLOCKER]` (P0), the Overall System Readiness Score is unconditionally capped at a maximum of **50%**. However, the simulation MUST NOT terminate early; it must continue evaluating downstream steps under a hypothetical pass assumption to expose all latent gaps across the entire lifecycle.
   </directive>
@@ -58,7 +62,8 @@ The probe operates on a two-tier **Hybrid & Progressive Verification Model**:
 
 ```mermaid
 flowchart TD
-    Scenario["User Scenario Seed"] --> Layer1["Layer 1: Static Deep Code Traversal<br/>(Inspect Schemas, UI Primitives, Services, Routes)"]
+    Scenario["User Scenario Seed"] --> Ingestion["Phase -1: Autonomous Domain & Architecture Ingestion<br/>(Scan CONTEXT.md, PRODUCT.md, Schemas, Routes)"]
+    Ingestion --> Layer1["Layer 1: Static Deep Code Traversal<br/>(Inspect Schemas, UI Primitives, Services, Routes)"]
     Layer1 --> SeamCheck{"Critical Seam or Invariant<br/>Requires Live Verification?"}
     SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
@@ -68,13 +73,16 @@ flowchart TD
     ChatSummary --> RemediationPrompt["Prompt Direct Remediation Handoff for P0 Blockers"]
 ```
 
-1. **Layer 1 — Deep Static Traversal (Default):**
+1. **Phase -1 — Autonomous Domain & Architecture Ingestion:**
+   - Silently inspects repository manifests (`package.json`, `pyproject.toml`, `Cargo.toml`), documentation (`CONTEXT.md`, `PRODUCT.md`, `README.md`), and core routes/schemas.
+   - Synthesizes the 6 Domain Invariant Pillars specific to the active system.
+2. **Layer 1 — Deep Static Traversal (Default):**
    - Autonomously inspects component trees, API contracts, Zod schemas, state stores, and domain services.
    - Verifies whether UI primitives exist in `src/components/ui` or views to satisfy each user need.
-2. **Layer 2 — Headless Runtime Verification:**
+3. **Layer 2 — Headless Runtime Verification:**
    - Where deterministic mathematical, hardware, or lifecycle invariants are concerned, inspect and run relevant repository verification scripts (e.g., `npx tsx scripts/verify-*.ts` or npm test commands).
    - Validates that state transitions, DB migrations, and hardware locks actually pass under live execution conditions.
-3. **Layer 3 — Evidence Synthesis & In-Repo Persistence:**
+4. **Layer 3 — Evidence Synthesis & In-Repo Persistence:**
    - Merges code-level inspection with script output logs to prove or disprove system capabilities.
    - Writes the full audit report into `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`.
 
@@ -82,16 +90,20 @@ flowchart TD
 
 ## 4. The 6-Phase Simulation Protocol
 
+### Phase -1: Autonomous Domain & Architecture Ingestion
+1. Read the system's foundational specifications (`CONTEXT.md`, `PRODUCT.md`, `Architecture_Decision.md` or equivalent).
+2. Dynamically derive the **6 Core Domain Pillars** that govern this application (e.g., for an animation suite: Worldbuilding, Characters, Screenplay, Staging, Diffusion, Acoustics; for e-commerce: Catalog, Cart, Checkout, Payment, Inventory, Notifications).
+
 ### Phase 0: Scenario Ingestion & Persona Synthesis
 1. Extract the core intent, creative seed, or business goal from `<XXX>`.
 2. Apply the **Worst-Case Ambiguity Persona Principle**:
-   - **Default Archetype:** *The Zero-Detail Auteur*. High artistic ambition, zero technical diffusion knowledge, no pre-written scripts, no turnarounds, and no prompt keywords.
-   - **Technical Exception:** If and only if `<XXX>` explicitly specifies technical parameters (e.g., specific LoRA weights, $4n+1$ frame counts, or PCM ducking parameters), adopt the *Informed Technical Showrunner* archetype.
+   - **Default Archetype:** *The Zero-Detail Auteur*. High artistic/operational ambition, zero internal technical knowledge, no pre-written assets, and no prompt keywords.
+   - **Technical Exception:** If and only if `<XXX>` explicitly specifies technical parameters (e.g., specific weights, frame rates, or custom protocols), adopt the *Informed Technical Showrunner* archetype.
    - **Initial State:** Directory setup, existing assets, credentials, hardware state.
    - **Target Deliverable:** The concrete finished product or outcome the user wants to achieve.
 
 ### Phase 1: Intent Deconstruction & Pillar Mapping
-Deconstruct the ambiguous user seed into mandatory domain pillars (e.g., for an animation workstation: Worldbuilding, Characters, Screenplay, Staging, Diffusion, Acoustics).
+Deconstruct the ambiguous user seed into the 6 dynamically ingested domain pillars.
 - Map all explicit, implicit, and downstream requirements.
 - Anticipate user friction points (decision paralysis, blank-canvas intimidation, technical jargon, hidden prerequisites).
 
@@ -146,17 +158,20 @@ The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the c
 **Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%] (Hard-Gate applied if P0)  
 **Physical Audit File:** [docs/audits/scenario-slug-timestamp.md](file:///path/to/docs/audits/scenario-slug-timestamp.md)
 
-## 1. Scenario Intent & Sub-Needs Deconstruction
+## 1. Domain Ontology & System Pillars
+[Ingested domain type and 6 derived core pillars]
+
+## 2. Scenario Intent & Sub-Needs Deconstruction
 [Breakdown across domain pillars + anticipated cognitive hurdles]
 
-## 2. End-to-End User Journey Simulation Matrix
+## 3. End-to-End User Journey Simulation Matrix
 | Step | User Action | Interface / View | Under-the-Hood Seam | Status | Friction / Gap Analysis |
 |:---|:---|:---|:---|:---|:---|
 | 1 | ... | ... | ... | `[SUPPORTED]` | ... |
 | 2 | ... | ... | ... | `[HIGH_FRICTION]` | ... |
 | 3 | ... | ... | ... | `[CRITICAL_BLOCKER]` | ... |
 
-## 3. System Scorecard
+## 4. System Scorecard
 - **Directorial Guidance & Co-Pilot:** [XX]% — [Brief rationale]
 - **End-to-End Pipeline Completeness:** [XX]% — [Brief rationale]
 - **Cognitive Ergonomics & Usability:** [XX]% — [Brief rationale]
@@ -164,7 +179,7 @@ The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the c
 - **Output Consistency & Quality:** [XX]% — [Brief rationale]
 **Overall System Readiness Score:** **[XX]%** [Note if capped at 50% due to P0 blocker]
 
-## 4. Prioritized Remediation Action Plan
+## 5. Prioritized Remediation Action Plan
 ### P0 — Critical Blockers (Showstoppers)
 - [ ] **[File / Seam]**: Description of fix.
 ### P1 — High Friction & Guidance Gaps (Co-Pilot)
