@@ -5,7 +5,7 @@ description: Autonomous end-to-end user scenario simulation, task flow extractio
 
 # Scenario Probe: End-to-End User Journey Simulation & Capability Crucible
 
-A rigorous, evidence-based evaluation skill for testing real software systems, AI workstations, and applications through realistic, step-by-step user scenarios. Probes actual code, UI primitives, and backend services to uncover friction, gaps, dead-ends, and system readiness without hallucination.
+A rigorous, evidence-based evaluation skill for testing real software systems, AI workstations, and applications through realistic, step-by-step user scenarios. Probes actual code, UI primitives, backend services, and runtime verification scripts to uncover friction, gaps, dead-ends, and system readiness without hallucination.
 
 ---
 
@@ -31,25 +31,40 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
 
 ---
 
-## 2. Invocation Triggers
+## 2. Invocation Triggers & Syntax
 
 Activate this skill when:
-- The user inputs `test <scenario / feature / seed>` (e.g., `test bulutların üzerindeki animasyon dünyası`, `test guest checkout`, `test multi-speaker dialogue`).
+- The user inputs `test <scenario / feature / seed>` (e.g., `test bulutların üzerindeki animasyon dünyası`, `test guest checkout flow`, `test multi-speaker dialogue`).
 - The user inputs `scenario-probe <query>` or `simulate user <intent>`.
 - The user requests an end-to-end user journey audit, stress test, or capability gap analysis on the current state of the codebase.
 
 ---
 
-## 3. The 5-Phase Simulation Protocol
+## 3. Hybrid & Progressive Execution Engine
+
+The probe operates on a two-tier **Hybrid & Progressive Verification Model**:
 
 ```mermaid
 flowchart TD
-    Input["Trigger: 'test <XXX>'"] --> Phase0["Phase 0: Scenario Ingestion & Persona Synthesis"]
-    Phase0 --> Phase1["Phase 1: Intent Deconstruction & Pillar Mapping"]
-    Phase1 --> Phase2["Phase 2: Deterministic Task Flow & Journey Generation"]
-    Phase2 --> Phase3["Phase 3: Codebase-Grounded Step Simulation & Gap Audit"]
-    Phase3 --> Phase4["Phase 4: Executive Scorecard & Prioritized Remediation Plan"]
+    Scenario["User Scenario Seed"] --> Layer1["Layer 1: Static Deep Code Traversal<br/>(Inspect Schemas, UI Primitives, Services, Routes)"]
+    Layer1 --> SeamCheck{"Critical Seam or Invariant<br/>Requires Live Verification?"}
+    SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
+    SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
+    Layer2 --> Synthesize
 ```
+
+1. **Layer 1 — Deep Static Traversal (Default):**
+   - Autonomously inspects component trees, API contracts, Zod schemas, state stores, and domain services.
+   - Verifies whether UI primitives exist in `src/components/ui` or views to satisfy each user need.
+2. **Layer 2 — Headless Runtime Verification:**
+   - Where deterministic mathematical, hardware, or lifecycle invariants are concerned, inspect and run relevant repository verification scripts (e.g., `npx tsx scripts/verify-*.ts` or npm test commands).
+   - Validates that state transitions, DB migrations, and hardware locks actually pass under live execution conditions.
+3. **Layer 3 — Evidence Synthesis:**
+   - Merges code-level inspection with script output logs to prove or disprove system capabilities.
+
+---
+
+## 4. The 5-Phase Simulation Protocol
 
 ### Phase 0: Scenario Ingestion & Persona Synthesis
 1. Extract the core intent, creative seed, or business goal from `<XXX>`.
@@ -69,12 +84,13 @@ Map the chronological path the user must take through the application:
 - Order steps linearly from cold start to final output.
 - Link each step to the intended view, screen, or interface state.
 
-### Phase 3: Codebase-Grounded Step Simulation & Gap Audit
+### Phase 3: Codebase & Runtime Step Simulation (Gap Audit)
 For every single step in the journey, silently inspect the codebase and evaluate:
 1. **User Action & Input:** Exactly what the user attempts to enter, click, or configure.
 2. **UI Primitive / Interface Availability:** Which component in `src/components/ui` or views handles this?
 3. **Under-the-Hood Backend Seam:** Which API route, domain service, or database table is triggered?
-4. **Classification Status:**
+4. **Runtime Verification:** If an automated test/verification script exists for this seam, execute it or verify its latest assertions.
+5. **Classification Status:**
    - `[SUPPORTED]` — Fully operational, guided, and verifiable in code.
    - `[HIGH_FRICTION]` — Possible, but suffers from steep cognitive load, lack of smart defaults, or complex manual inputs.
    - `[SYSTEM_GAP]` — Required sub-need is completely missing or unsupported in the current codebase.
@@ -97,7 +113,7 @@ Synthesize the audit into:
 
 ---
 
-## 4. Standard Output Schema
+## 5. Standard Output Schema
 
 When reporting results to the user, strictly follow this structure:
 
