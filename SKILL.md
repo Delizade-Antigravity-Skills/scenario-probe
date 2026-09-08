@@ -20,8 +20,8 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     If an action cannot be performed using existing UI components or backend endpoints, explicitly classify it as `[SYSTEM_GAP]` or `[CRITICAL_BLOCKER]`. Speculative workarounds, fake buttons, and imaginary wizards are strictly prohibited.
   </directive>
 
-  <directive id="persona_discipline">
-    Preserve user persona constraints rigorously. If a user arrives with only a vague seed (e.g., "world above the clouds"), do not assume they know internal database models, ComfyUI node wiring, terminal commands, or advanced prompt engineering formulas unless the system guides them.
+  <directive id="worst_case_ambiguity_persona">
+    Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
   <directive id="high_density_reporting">
@@ -68,9 +68,9 @@ flowchart TD
 
 ### Phase 0: Scenario Ingestion & Persona Synthesis
 1. Extract the core intent, creative seed, or business goal from `<XXX>`.
-2. Establish the **User Persona Profile**:
-   - **Archetype:** (e.g., *The Zero-Detail Auteur*, *The Technical Showrunner*, *The First-Time Operator*).
-   - **Domain Knowledge:** What the user knows vs. does not know.
+2. Apply the **Worst-Case Ambiguity Persona Principle**:
+   - **Default Archetype:** *The Zero-Detail Auteur*. High artistic ambition, zero technical diffusion knowledge, no pre-written scripts, no turnarounds, and no prompt keywords.
+   - **Technical Exception:** If and only if `<XXX>` explicitly specifies technical parameters (e.g., specific LoRA weights, $4n+1$ frame counts, or PCM ducking parameters), adopt the *Informed Technical Showrunner* archetype.
    - **Initial State:** Directory setup, existing assets, credentials, hardware state.
    - **Target Deliverable:** The concrete finished product or outcome the user wants to achieve.
 
@@ -86,8 +86,8 @@ Map the chronological path the user must take through the application:
 
 ### Phase 3: Codebase & Runtime Step Simulation (Gap Audit)
 For every single step in the journey, silently inspect the codebase and evaluate:
-1. **User Action & Input:** Exactly what the user attempts to enter, click, or configure.
-2. **UI Primitive / Interface Availability:** Which component in `src/components/ui` or views handles this?
+1. **User Action & Input:** Exactly what the user attempts to enter, click, or configure (constrained by the Persona's knowledge).
+2. **UI Primitive / Interface Availability:** Which component in `src/components/ui` or views handles this? Does it provide smart defaults or co-pilot guidance, or does it present an empty, intimidating input?
 3. **Under-the-Hood Backend Seam:** Which API route, domain service, or database table is triggered?
 4. **Runtime Verification:** If an automated test/verification script exists for this seam, execute it or verify its latest assertions.
 5. **Classification Status:**
