@@ -24,6 +24,10 @@ A rigorous, evidence-based evaluation skill for testing real software systems, A
     Unless the user's input explicitly specifies technical parameters or expert flags, default strictly to the **Zero-Detail Auteur** persona (Worst-Case Ambiguity Principle). The agent is strictly prohibited from 'cheating' by assuming the simulated user writes expert prompt-engineering keywords, manually configures seeds, or runs terminal commands that the UI does not explicitly guide them through.
   </directive>
 
+  <directive id="in_repo_persistent_audit">
+    Every scenario simulation must automatically generate a physical audit document in the repository at `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`. The chat response must provide a concise executive summary and link directly to this physical file.
+  </directive>
+
   <directive id="high_density_reporting">
     Output findings with high token density: structured Markdown matrices, concrete file links (`file:///...`), direct UI component references, and prioritized remediation actions. Eliminate conversational fluff.
   </directive>
@@ -51,6 +55,8 @@ flowchart TD
     SeamCheck -- "Yes & Verification Script Exists" --> Layer2["Layer 2: Headless Script & Runtime Audit<br/>(Execute scripts/verify-*.ts, Test Suites, tsc)"]
     SeamCheck -- "No / Deterministic Code Proof" --> Synthesize["Layer 3: Evidence Synthesis & Gap Scoring"]
     Layer2 --> Synthesize
+    Synthesize --> InRepoDoc["Write Physical Audit to docs/audits/scenario-*.md"]
+    InRepoDoc --> ChatSummary["Deliver Executive Summary & Clickable File Link in Chat"]
 ```
 
 1. **Layer 1 — Deep Static Traversal (Default):**
@@ -59,8 +65,9 @@ flowchart TD
 2. **Layer 2 — Headless Runtime Verification:**
    - Where deterministic mathematical, hardware, or lifecycle invariants are concerned, inspect and run relevant repository verification scripts (e.g., `npx tsx scripts/verify-*.ts` or npm test commands).
    - Validates that state transitions, DB migrations, and hardware locks actually pass under live execution conditions.
-3. **Layer 3 — Evidence Synthesis:**
+3. **Layer 3 — Evidence Synthesis & In-Repo Persistence:**
    - Merges code-level inspection with script output logs to prove or disprove system capabilities.
+   - Writes the full audit report into `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`.
 
 ---
 
@@ -96,9 +103,8 @@ For every single step in the journey, silently inspect the codebase and evaluate
    - `[SYSTEM_GAP]` — Required sub-need is completely missing or unsupported in the current codebase.
    - `[CRITICAL_BLOCKER]` — Dead-end; halts progress, crashes, or fails invariant pre-flight checks.
 
-### Phase 4: Executive Scorecard & Prioritized Remediation Plan
-Synthesize the audit into:
-1. **Journey Summary Table:** Comprehensive step-by-step capability matrix.
+### Phase 4: In-Repo Documentation & Executive Scorecard
+1. **Physical File Generation:** Create the target folder if missing (`mkdir -p docs/audits`) and write the comprehensive report to `docs/audits/scenario-<scenario_slug>-<YYYYMMDD-HHmmss>.md`.
 2. **Multi-Dimensional Scorecard (0–100%):**
    - **Directorial Guidance & Co-Pilot (Weight: 25%):** System assistance in turning vague ideas into concrete assets.
    - **End-to-End Pipeline Completeness (Weight: 25%):** Can the deliverable actually be completed and exported?
@@ -106,20 +112,22 @@ Synthesize the audit into:
    - **Execution Determinism & Safety (Weight: 15%):** Hardware safety, invariant validation, and error resilience.
    - **Output Consistency & Quality (Weight: 15%):** Fidelity, structural cohesion, and synchronization.
    - **Overall System Readiness Score:** Weighted composite score.
-3. **Actionable Remediation Plan:**
-   - **P0 (Critical Blockers):** Must-fix showstoppers.
-   - **P1 (High Friction & Guidance Gaps):** Co-pilot enhancements and smart defaults.
-   - **P2 (Deepening & Polish):** Usability refinements and ergonomic optimizations.
+3. **Prioritized Remediation Action Plan:**
+   - **P0 (Critical Blockers):** Must-fix showstoppers preventing completion.
+   - **P1 (High Friction & Guidance Gaps):** Missing smart defaults, co-pilot suggestion triggers, or confusing inputs.
+   - **P2 (Deepening & Polish):** Usability refinements, visual ergonomics, and telemetry feedback.
+4. **Chat Executive Summary:** Output a clean, high-density summary table in the chat ending with a direct markdown link to the physical file: `[Full Audit Report](file://docs/audits/...)`.
 
 ---
 
 ## 5. Standard Output Schema
 
-When reporting results to the user, strictly follow this structure:
+The generated document in `docs/audits/scenario-<slug>-<timestamp>.md` and the chat response must follow this structure:
 
 ```markdown
 # Scenario Probe: [Scenario Name]
-**Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%]
+**Target Deliverable:** [Outcome] | **Persona:** [Archetype] | **Readiness Score:** [XX%]  
+**Physical Audit File:** [docs/audits/scenario-slug-timestamp.md](file:///path/to/docs/audits/scenario-slug-timestamp.md)
 
 ## 1. Scenario Intent & Sub-Needs Deconstruction
 [Breakdown across domain pillars + anticipated cognitive hurdles]
